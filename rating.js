@@ -3,6 +3,11 @@ class RatingElement extends HTMLElement {
         super();
 
         this.ratingElements = [];
+
+        // Handle default data sent as attributes.
+        // Make sure value and number are last since they invoke render actions.
+        this._defaultClass = this.getAttribute('default-class') || 'x-rating';
+        this._markedClass = this.getAttribute('marked-class') || 'x-marked';
         this.value = parseInt(this.getAttribute('value')) || 0;
         this.number = parseInt(this.getAttribute('number')) || 5;
 
@@ -10,7 +15,7 @@ class RatingElement extends HTMLElement {
         this.highlight(this.value - 1);
 
         // Reset hovering state to an actual state once it stops.
-        this.addEventListener('mouseout', e => this.highlight(this.value));
+        this.addEventListener('mouseout', e => this.highlight(this.value - 1));
     }
 
     get value() {
@@ -34,7 +39,7 @@ class RatingElement extends HTMLElement {
     highlight(index) {
         // Highlight all the ratings up to and including the index.
         this.ratingElements.forEach((el, i) => {
-            el.classList.toggle('marked', i <= index);
+            el.classList.toggle(this._markedClass, i <= index);
         });
     }
 
@@ -43,7 +48,7 @@ class RatingElement extends HTMLElement {
 
         for (let i = 0; i < this.number; i++) {
             const el = document.createElement('div');
-            el.className = 'rating';
+            el.className = this._defaultClass;
             this.appendChild(el);
             this.ratingElements.push(el);
             el.addEventListener('mousemove', e => this.highlight(i));
