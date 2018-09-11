@@ -1,6 +1,7 @@
 # rating-custom-element
 :snowboarder: Rating Custom Element
 
+Intended as plug and play HTML element to enable custom rating. Styling is left completely to the end user.
 
 ## Usage
 
