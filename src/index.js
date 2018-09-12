@@ -1,5 +1,5 @@
 class RatingElement extends HTMLElement {
-  constructor () {
+  constructor() {
     super();
 
     this.ratingElements = [];
@@ -18,32 +18,32 @@ class RatingElement extends HTMLElement {
     this.addEventListener('mouseout', e => this.highlight(this.value - 1));
   }
 
-  get value () {
+  get value() {
     return this._value;
   }
-  set value (val) {
+  set value(val) {
     this.setAttribute('value', val);
     this._value = val;
     this.highlight(val - 1);
   }
 
-  get number () {
+  get number() {
     return this._number;
   }
-  set number (num) {
+  set number(num) {
     this.setAttribute('number', num);
     this._number = num;
     this.createRatingElements();
   }
 
-  highlight (index) {
+  highlight(index) {
     // Highlight all the ratings up to and including the index.
     this.ratingElements.forEach((el, i) => {
       el.classList.toggle(this._markedClass, i <= index);
     });
   }
 
-  createRatingElements () {
+  createRatingElements() {
     this.clearRatingElements();
 
     for (let i = 0; i < this.number; i++) {
@@ -53,13 +53,13 @@ class RatingElement extends HTMLElement {
       this.ratingElements.push(el);
       el.addEventListener('mousemove', e => this.highlight(i));
       el.addEventListener('click', e => {
-        this.value = i + 1
+        this.value = i + 1;
         this.dispatchEvent(new Event('rate'));
       });
     }
   }
 
-  clearRatingElements () {
+  clearRatingElements() {
     this.ratingElements = [];
     while (this.firstChild) {
       this.removeChild(this.firstChild);
