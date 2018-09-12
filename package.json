@@ -1,6 +1,6 @@
 {
   "name": "rating-custom-element",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Rating Custom Element. Intended as plug and play HTML element to enable custom rating. For in-browser usage.",
   "main": "src/index.js",
   "scripts": {
