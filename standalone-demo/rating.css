@@ -2,7 +2,7 @@ x-rating-element {
     display: inline-block;
 }
 
-x-rating-element > .x-choice {
+x-rating-element > .choice {
     position: relative;
     display: inline-block;
     width: 1.5rem;
@@ -12,15 +12,15 @@ x-rating-element > .x-choice {
     cursor: pointer;
 }
 
-x-rating-element > .x-choice + .x-choice {
+x-rating-element > .choice + .choice {
     margin-left: .3rem;
 }
 
-x-rating-element > .x-choice:last-child {
+x-rating-element > .choice:last-child {
     margin-right: .3rem;
 }
 
-x-rating-element > .x-choice:before {
+x-rating-element > .choice:before {
     position: absolute;
     content: "\2605";
     font-size: 2rem;
@@ -29,14 +29,14 @@ x-rating-element > .x-choice:before {
     vertical-align: top;
 }
 
-x-rating-element > .x-choice.checked {
+x-rating-element > .choice.checked {
     color: rgb(228, 173, 101);
 }
 
-x-rating-element > .x-choice.highlighted ~ .x-choice.checked:not(.highlighted) {
+x-rating-element > .choice.highlighted ~ .choice.checked:not(.highlighted) {
     color: rgb(241, 208, 165);
 }
 
-x-rating-element > .x-choice.highlighted {
+x-rating-element > .choice.highlighted {
     color: rgb(255, 147, 6);
 }

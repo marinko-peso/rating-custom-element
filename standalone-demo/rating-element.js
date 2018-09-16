@@ -8,7 +8,7 @@ class RatingElement extends HTMLElement {
 
     this.choices = [];
     this._classes = {
-      choices: this.getAttribute('choices-class') || 'x-choice',
+      choice: this.getAttribute('choice-class') || 'choice',
       checked: this.getAttribute('checked-class') || 'checked',
       highlighted: this.getAttribute('highlighted-class') || 'highlighted'
     };
@@ -58,7 +58,7 @@ class RatingElement extends HTMLElement {
     this.choices.forEach(el => el.remove());
     this.choices = Array.from({ length: this.max }, () => {
       const el = document.createElement('div');
-      el.className = this._classes.choices;
+      el.className = this._classes.choice;
       return this.appendChild(el);
     });
   }
