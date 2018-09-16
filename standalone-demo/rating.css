@@ -1,11 +1,34 @@
-.x-rating {
-    width: 20px;
-    height: 20px;
-    margin: 5px;
-    background-color: blue;
+x-rating-element {
     display: inline-block;
 }
 
-.x-marked {
-    background-color: red;
+x-rating-element > .x-rating {
+    position: relative;
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    line-height: 1.5rem;
+    color: rgb(102, 102, 102);
+    cursor: pointer;
+}
+
+x-rating-element > .x-rating + .x-rating {
+    margin-left: .3rem;
+}
+
+x-rating-element > .x-rating:last-child {
+    margin-right: .3rem;
+}
+
+x-rating-element > .x-rating:before {
+    position: absolute;
+    content: "\2605";
+    font-size: 2rem;
+    color: inherit;
+    transition: 250ms color ease-in-out;
+    vertical-align: top;
+}
+
+x-rating-element > .x-rating.x-marked {
+    color: rgb(255, 147, 6);
 }
