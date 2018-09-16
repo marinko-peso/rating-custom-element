@@ -6,8 +6,12 @@
         <link rel="stylesheet" href="rating.css">
     </head>
     <body>
-        <x-rating-element value="2" number="7" default-class="" marked-class="">
+        <x-rating-element id="rating" value="2" max="7">
         </x-rating-element>
         <script src="rating-element.js"></script>
+        <script>
+            const rating = document.getElementById('rating');
+            rating.addEventListener('rate', e => console.info('rate', e.detail));
+        </script>
     </body>
 </html>
