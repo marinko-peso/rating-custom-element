@@ -11,7 +11,7 @@
 
 Intended as plug and play HTML element to enable custom rating. Styling is left completely to the end user. For in-browser usage.
 
-View [demo](https://htmlpreview.github.io/?https://github.com/marinko-peso/rating-custom-element/blob/master/standalone-demo/index.html).
+View [demo](https://htmlpreview.github.io/?https://github.com/marinko-peso/rating-custom-element/blob/master/demo/index.html).
 
 
 
