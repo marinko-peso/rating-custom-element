@@ -1,71 +1,100 @@
 class RatingElement extends HTMLElement {
+  static get observedAttributes() {
+    return ['value', 'max'];
+  }
+
   constructor() {
     super();
 
-    this.ratingElements = [];
+    this.choices = [];
+    this._classes = {
+      choice: this.getAttribute('choice-class') || 'choice',
+      checked: this.getAttribute('checked-class') || 'checked',
+      highlighted: this.getAttribute('highlighted-class') || 'highlighted'
+    };
 
-    // Handle default data sent as attributes.
-    // Make sure value and number are last since they invoke render actions.
-    this._defaultClass = this.getAttribute('default-class') || 'x-rating';
-    this._markedClass = this.getAttribute('marked-class') || 'x-marked';
-    this.value = parseInt(this.getAttribute('value')) || 0;
-    this.number = parseInt(this.getAttribute('number')) || 5;
-
-    // Initial value highlight.
-    this.highlight(this.value - 1);
-
-    // Reset hovering state to an actual state once it stops.
-    this.addEventListener('mouseout', e => this.highlight(this.value - 1));
+    this.onHighlight = this.onHighlight.bind(this);
+    this.onRate = this.onRate.bind(this);
   }
 
-  get value() {
-    return this._value;
-  }
-  set value(val) {
-    this.setAttribute('value', val);
-    this._value = val;
-    this.highlight(val - 1);
+  onHighlight(e) {
+    if (e.type === 'mouseleave') return this.highlightChoices();
+    const index = this.choices.indexOf(e.target);
+    if (index !== -1) this.highlightChoices(index);
   }
 
-  get number() {
-    return this._number;
-  }
-  set number(num) {
-    this.setAttribute('number', num);
-    this._number = num;
-    this.createRatingElements();
+  onRate(e) {
+    const index = this.choices.indexOf(e.target);
+    if (index === -1) return;
+    const oldValue = this.value;
+    const value = index + 1;
+    this.value = value;
+    const detail = { value, oldValue };
+    this.dispatchEvent(new CustomEvent('rate', { detail }));
   }
 
-  highlight(index) {
-    // Highlight all the ratings up to and including the index.
-    this.ratingElements.forEach((el, i) => {
-      el.classList.toggle(this._markedClass, i <= index);
+  connectedCallback() {
+    this.addEventListener('mouseleave', this.onHighlight);
+    this.addEventListener('mouseover', this.onHighlight);
+    this.addEventListener('click', this.onRate);
+
+    if (!this.hasAttribute('value')) this.setAttribute('value', 0);
+    if (!this.hasAttribute('max')) this.setAttribute('max', 5);
+  }
+
+  disconnectedCallback() {
+    this.removeEventListener('mouseleave', this.onHighlight);
+    this.removeEventListener('mouseover', this.onHighlight);
+    this.removeEventListener('click', this.onRate);
+  }
+
+  attributeChangedCallback(name) {
+    if (name === 'max') this.renderChoices();
+    const predicate = (_, i) => i < this.value;
+    return toggleClass(this.choices, this._classes.checked, predicate);
+  }
+
+  renderChoices() {
+    this.choices.forEach(el => el.remove());
+    this.choices = Array.from({ length: this.max }, () => {
+      const el = document.createElement('div');
+      el.className = this._classes.choice;
+      return this.appendChild(el);
     });
   }
 
-  createRatingElements() {
-    this.clearRatingElements();
-
-    for (let i = 0; i < this.number; i++) {
-      const el = document.createElement('div');
-      el.className = this._defaultClass;
-      this.appendChild(el);
-      this.ratingElements.push(el);
-      el.addEventListener('mousemove', e => this.highlight(i));
-      el.addEventListener('click', e => {
-        this.value = i + 1;
-        this.dispatchEvent(new Event('rate'));
-      });
-    }
+  highlightChoices(end = -1) {
+    const predicate = (_, i) => i <= end;
+    return toggleClass(this.choices, this._classes.highlighted, predicate);
   }
 
-  clearRatingElements() {
-    this.ratingElements = [];
-    while (this.firstChild) {
-      this.removeChild(this.firstChild);
-    }
+  get value() {
+    return parseInt(this.getAttribute('value'), 10);
+  }
+
+  set value(val) {
+    val = parseInt(val, 10);
+    if (val < 0 || val > this.max) return;
+    this.setAttribute('value', val);
+  }
+
+  get max() {
+    return parseInt(this.getAttribute('max'), 10);
+  }
+
+  set max(val) {
+    val = parseInt(val, 10);
+    if (val < Math.max(this.value, 1)) return;
+    this.setAttribute('max', val);
   }
 }
 
-// Register element so browser knows what to do with it.
-window.customElements.define('x-rating-element', RatingElement);
+if (window.customElements && window.customElements.define) {
+  window.customElements.define('x-rating-element', RatingElement);
+}
+
+function toggleClass(elements, className, callback) {
+  elements.forEach((el, i, items) => {
+    el.classList.toggle(className, callback(el, i, items));
+  });
+}
